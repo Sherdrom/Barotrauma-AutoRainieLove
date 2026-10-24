@@ -2,11 +2,7 @@
 
 多人游戏只剩最后一名船员时，全服一起响起音乐，包括已死亡的玩家和旁观者。单人游戏仍在自己成为最后一名幸存者时播放。
 
-当前音乐来自[《雨爱 DJ》一小时循环版](https://www.bilibili.com/video/BV18QqmBCEom)，保留从原曲开头开始的完整第一遍，长度 **4 分 16.125 秒**，约 **4.5 MiB**，比原来的 65 MiB 减少约 **93%**，保存为 `Sounds/last_survivor.ogg`（48 kHz 立体声 Ogg Vorbis）。由游戏音频通道流式循环播放，无需保存一小时的重复音频。
-
-剪辑范围为原音轨 `00:00.000` 至 `04:16.125333`（不含第二遍），长度为 12,294,016 个采样帧。按用户指定的约 4:13 附近核对后，原曲开头在 4:16.125333 再现；开头第 5–20 秒与对应重复段的波形匹配度约 99%。完整保留原曲开头，直接在重复起点接回 0:00，不从中段起播，也不再对开头叠加交叉淡化。全段解码及接缝波形检查通过，实际听感仍需游戏内确认。
-
-一小时原音轨备份保留在 `/home/Sherd/Downloads/AutoRainieLove-original/BV18QqmBCEom-original.m4a`，后续剪辑以该文件的时间为准。
+当前音乐来自[《雨爱 DJ》一小时循环版](https://www.bilibili.com/video/BV18QqmBCEom)
 
 ## 使用
 
@@ -46,7 +42,5 @@ ffmpeg -i "/你的音乐路径/歌曲.mp3" -c:a libvorbis -q:a 5 "/mnt/data/Stea
 在模组根目录运行 `lua tests/last_survivor_test.lua`。测试使用模拟游戏接口验证触发和清理逻辑，不替代游戏内音频及联机验证。
 
 模拟测试覆盖单人规则、服务器人数判定与广播、存活/死亡/旁观客户端、重复通知、回合重置、音频错误和音乐互斥。不替代游戏内验证；背景音乐拦截依赖当前版本的 `SoundPlayer.UpdateMusic` 和 `musicChannel` 接口。
-
-联机验收：三名船员和一名旁观者开始回合，先击倒一人不应播放；杀死一人仍不播放；只剩一名船员时，所有客户端都应从原曲开头播放，并立即停止之前的音乐。持续等待超过 4 分 16 秒，应从原曲开头再次循环，背景音乐仍被阻止。复活队友应全员停止循环并恢复背景音乐，再次减员不重播；进入新回合可以再次触发。
 
 接口依据：[Luatrauma 网络文档](https://luatrauma.github.io/Luatrauma.Docs/api/lua/code/networking/)、[Hook 文档](https://luatrauma.github.io/Luatrauma.Docs/api/lua/code/hook/)、[游戏背景音乐源码](https://github.com/FakeFishGames/Barotrauma/blob/master/Barotrauma/BarotraumaClient/ClientSource/Sounds/SoundPlayer.cs)。
